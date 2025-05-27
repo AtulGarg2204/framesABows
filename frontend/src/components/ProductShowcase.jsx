@@ -62,38 +62,32 @@ const ProductShowcase = () => {
     return '/placeholder-product.jpg'; // Fallback image
   };
 
-  // Format price range
-  const formatPriceRange = (priceRange) => {
-    if (!priceRange) return 'Price not available';
-    
-    const { min, max } = priceRange;
-    if (min === max) return `${min}`;
-    return `${min} - ${max}`;
+  // Format price
+  const formatPrice = (price) => {
+    if (!price && price !== 0) return 'Price not available';
+    return `₹${price}`;
   };
 
   return (
-    <section id="products" className="py-16 bg-white">
-      <div 
-        ref={sectionRef}
-        className="px-4 sm:px-8 md:px-16 lg:px-[150px] py-8 lg:pt-16 overflow-hidden"
-      >
-        {/* Section header with pink line above - animated */}
-        <div className="flex flex-col items-center mb-12 lg:mb-16">
-          <div 
-            className={`w-12 lg:w-16 h-1 bg-pink-400 mb-4 lg:mb-6 transition-all duration-1000 transform ${
-              isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
-            }`}
-            style={{ transitionDelay: '200ms' }}
-          ></div>
+    <section ref={sectionRef} id="products" className="py-12 bg-white px-[20px] sm:px-0 md:px-0 lg:px-[100px]">
+      <div className="mx-auto max-w-[1200px]">
+        {/* Section header with pink line below - animated */}
+        <div className="text-center mb-8">
           <h2 
-            className={`text-center transition-all duration-1000 transform ${
+            className={`text-[32px] lg:text-[52px] font-playfair text-[#18181B] mb-3 transition-all duration-1000 transform ${
               isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
             }`}
-            style={{ transitionDelay: '400ms' }}
+            style={{ transitionDelay: '200ms' }}
           >
             <span className="text-[32px] lg:text-[52px] font-playfair text-[#18181B]">Explore our </span>
             <span className="text-[32px] lg:text-[52px] font-playfair italic text-[#18181B]">products</span>
           </h2>
+          <div 
+            className={`w-16 h-1 bg-[#a98028] mx-auto transition-all duration-1000 transform ${
+              isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
+            }`}
+            style={{ transitionDelay: '400ms' }}
+          ></div>
         </div>
 
         {loading ? (
@@ -131,7 +125,7 @@ const ProductShowcase = () => {
                     {product.description || 'No description available'}
                   </p>
                   <span className="text-[16px] lg:text-[18px] font-satoshi font-medium text-[#18181B] mt-1">
-                    {formatPriceRange(product.priceRange)}
+                    {formatPrice(product.price)}
                   </span>
                 </div>
               </Link>

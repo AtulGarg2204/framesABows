@@ -189,7 +189,7 @@ const ViewProducts = () => {
                                 {product.name}
                               </p>
                               <p className="text-sm text-gray-500 truncate font-satoshi">
-                                ₹{product.priceRange.min} - ₹{product.priceRange.max}
+                                ₹{product.price}
                               </p>
                             </div>
                           </div>

@@ -79,12 +79,9 @@ const ProductDetails = () => {
     }
   };
 
-  const formatPrice = (priceRange) => {
-    if (!priceRange) return 'Price not available';
-    
-    const { min, max } = priceRange;
-    if (min === max) return `$${min}`;
-    return `$${min} - $${max}`;
+  const formatPrice = (price) => {
+    if (!price && price !== 0) return 'Price not available';
+    return `₹${price}`;
   };
 
   const getProductImage = (images, index = 0) => {
@@ -132,7 +129,7 @@ const ProductDetails = () => {
             {product.images && product.images.slice(0, 3).map((image, index) => (
               <div 
                 key={index} 
-                className={`cursor-pointer bg-[#f9f9f9] aspect-square overflow-hidden ${index === currentImageIndex ? 'border-2 border-pink-400' : ''}`}
+                className={`cursor-pointer bg-[#f9f9f9] aspect-square overflow-hidden ${index === currentImageIndex ? 'border-2 border-[#a98028]' : ''}`}
                 onClick={() => setCurrentImageIndex(index)}
               >
                 <img 
@@ -148,7 +145,7 @@ const ProductDetails = () => {
         {/* Right Side - Product Details */}
         <div>
           {/* Pink Line above title */}
-          <div className="w-12 h-1 bg-pink-400 mb-4"></div>
+          <div className="w-12 h-1 bg-[#a98028] mb-4"></div>
           
           <h1 className="text-3xl md:text-4xl font-playfair text-[#18181B] mb-4">
             {product.name}
@@ -161,11 +158,11 @@ const ProductDetails = () => {
           <div className="border-t border-b border-gray-200 py-6 mb-8">
             <div className="flex items-baseline mb-2">
               <span className="text-2xl font-medium text-[#18181B] mr-4">
-                {formatPrice(product.priceRange)}
+                {formatPrice(product.price)}
               </span>
-              {product.priceRange && product.priceRange.original && (
+              {product.originalPrice && (
                 <span className="text-lg text-gray-400 line-through">
-                  ${product.priceRange.original}
+                  ₹{product.originalPrice}
                 </span>
               )}
             </div>
@@ -209,7 +206,7 @@ const ProductDetails = () => {
             onClick={handleAddToCart}
             className="w-full bg-black text-white py-3 font-satoshi uppercase tracking-wider hover:bg-gray-800 transition-colors duration-300"
           >
-            ADD TO CART
+            ENQUIRE NOW
           </button>
         </div>
       </div>
@@ -218,7 +215,7 @@ const ProductDetails = () => {
       {relatedProducts.length > 0 && (
         <div className="mt-20">
           <div className="flex flex-col items-center mb-12">
-            <div className="w-12 h-1 bg-pink-400 mb-6"></div>
+            <div className="w-12 h-1 bg-[#a98028] mb-6"></div>
             <h2 className="text-center">
               <span className="text-3xl md:text-4xl font-playfair text-[#18181B]">You may also </span>
               <span className="text-3xl md:text-4xl font-playfair italic text-[#18181B]">like</span>
@@ -250,7 +247,7 @@ const ProductDetails = () => {
                     {product.description || 'No description available'}
                   </p>
                   <span className="text-base lg:text-lg font-satoshi font-medium text-[#18181B] mt-1">
-                    {formatPrice(product.priceRange)}
+                    {formatPrice(product.price)}
                   </span>
                 </div>
               </Link>

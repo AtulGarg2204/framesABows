@@ -35,14 +35,30 @@ const InstagramFeed = () => {
       try {
         setLoading(true);
         
-        const response = await fetch(`${process.env.REACT_APP_API_URL}/api/instagram/feed`);
-        const result = await response.json();
+        // Replace these with your actual values from Facebook Developer Console
+        const accessToken = process.env.REACT_APP_INSTAGRAM_ACCESS_TOKEN;
+        const userId = process.env.REACT_APP_INSTAGRAM_USER_ID;
+        
+        // Fetch posts from Instagram Graph API
+        const response = await fetch(
+          `https://graph.instagram.com/${userId}/media?fields=id,caption,media_url,permalink,timestamp&access_token=${accessToken}&limit=6`
+        );
         
         if (!response.ok) {
-          throw new Error(result.message || 'Failed to fetch Instagram posts');
+          throw new Error('Failed to fetch Instagram posts');
         }
+
+        const data = await response.json();
         
-        setPosts(result.data);
+        // Transform the data to match our needs
+        const transformedPosts = data.data.map(post => ({
+          id: post.id,
+          imageUrl: post.media_url,
+          caption: post.caption || '',
+          permalink: post.permalink
+        }));
+
+        setPosts(transformedPosts);
       } catch (err) {
         console.error('Error fetching Instagram posts:', err);
         setError('Failed to load Instagram posts. Please try again later.');
@@ -85,7 +101,7 @@ const InstagramFeed = () => {
             }`}
             style={{ transitionDelay: '300ms' }}
           >
-            @itz_atul_garg1
+            @framesandbowsofficial
           </p>
           <p 
             className={`text-gray-600 mt-2 font-satoshi transition-all duration-1000 transform ${
@@ -145,7 +161,7 @@ const InstagramFeed = () => {
               style={{ transitionDelay: `${700 + (posts.length * 100) + 200}ms` }}
             >
               <a 
-                href="https://www.instagram.com/itz_atul_garg1/" 
+                href="https://www.instagram.com/framesandbowsofficial?igsh=MXYzdWdlaXppMHgwNA==" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="inline-block px-6 py-3 border border-[#18181B] text-[#18181B] hover:bg-gray-100 transition-colors font-medium font-satoshi"

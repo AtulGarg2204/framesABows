@@ -11,17 +11,10 @@ const productSchema = new mongoose.Schema({
     required: [true, 'Product description is required'],
     trim: true
   },
-  priceRange: {
-    min: {
-      type: Number,
-      required: [true, 'Minimum price is required'],
-      min: 0
-    },
-    max: {
-      type: Number,
-      required: [true, 'Maximum price is required'],
-      min: 0
-    }
+  price: {
+    type: Number,
+    required: [true, 'Price is required'],
+    min: 0
   },
   images: [{
     type: String, // Base64 encoded image strings

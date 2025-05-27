@@ -8,10 +8,7 @@ const EditProduct = () => {
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    priceRange: {
-      min: '',
-      max: ''
-    },
+    price: '',
     whatsappUrl: '',
     images: []
   });
@@ -43,10 +40,7 @@ const EditProduct = () => {
         setFormData({
           name: data.data.name,
           description: data.data.description,
-          priceRange: {
-            min: data.data.priceRange.min,
-            max: data.data.priceRange.max
-          },
+          price: data.data.price,
           whatsappUrl: data.data.whatsappUrl,
           images: data.data.images || []
         });
@@ -67,29 +61,10 @@ const EditProduct = () => {
   // Handle text input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
-    if (name === 'minPrice') {
-      setFormData({
-        ...formData,
-        priceRange: {
-          ...formData.priceRange,
-          min: value
-        }
-      });
-    } else if (name === 'maxPrice') {
-      setFormData({
-        ...formData,
-        priceRange: {
-          ...formData.priceRange,
-          max: value
-        }
-      });
-    } else {
-      setFormData({
-        ...formData,
-        [name]: value
-      });
-    }
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
 
   // Handle image upload
@@ -145,20 +120,8 @@ const EditProduct = () => {
     setSuccess('');
     
     // Validate form
-    if (!formData.name || !formData.description || !formData.whatsappUrl) {
+    if (!formData.name || !formData.description || !formData.whatsappUrl || !formData.price) {
       setError('Please fill out all required fields');
-      setLoading(false);
-      return;
-    }
-    
-    if (!formData.priceRange.min || !formData.priceRange.max) {
-      setError('Please specify the price range');
-      setLoading(false);
-      return;
-    }
-    
-    if (parseFloat(formData.priceRange.min) > parseFloat(formData.priceRange.max)) {
-      setError('Minimum price cannot be greater than maximum price');
       setLoading(false);
       return;
     }
@@ -261,40 +224,22 @@ const EditProduct = () => {
                     />
                   </div>
                   
-                  {/* Price Range */}
-                  <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-                    <div>
-                      <label htmlFor="minPrice" className="block text-sm font-medium text-gray-700 font-satoshi">
-                        Minimum Price (₹) *
-                      </label>
-                      <input
-                        type="number"
-                        id="minPrice"
-                        name="minPrice"
-                        min="0"
-                        step="0.01"
-                        value={formData.priceRange.min}
-                        onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-satoshi"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <label htmlFor="maxPrice" className="block text-sm font-medium text-gray-700 font-satoshi">
-                        Maximum Price (₹) *
-                      </label>
-                      <input
-                        type="number"
-                        id="maxPrice"
-                        name="maxPrice"
-                        min="0"
-                        step="0.01"
-                        value={formData.priceRange.max}
-                        onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-satoshi"
-                        required
-                      />
-                    </div>
+                  {/* Price */}
+                  <div>
+                    <label htmlFor="price" className="block text-sm font-medium text-gray-700 font-satoshi">
+                      Price (₹) *
+                    </label>
+                    <input
+                      type="number"
+                      id="price"
+                      name="price"
+                      min="0"
+                      step="0.01"
+                      value={formData.price}
+                      onChange={handleChange}
+                      className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-satoshi"
+                      required
+                    />
                   </div>
                   
                   {/* WhatsApp URL */}
