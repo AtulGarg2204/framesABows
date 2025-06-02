@@ -30,7 +30,7 @@ const AddProduct = () => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: name === 'price' ? Number(value) : value
     });
   };
 
