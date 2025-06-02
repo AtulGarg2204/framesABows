@@ -6,7 +6,20 @@ const ProductShowcase = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const sectionRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+
+  // Check for mobile view
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Set up Intersection Observer to detect when section enters viewport
   useEffect(() => {
@@ -68,6 +81,95 @@ const ProductShowcase = () => {
     return `₹${price}`;
   };
 
+  if (isMobile) {
+    // Mobile layout - horizontal scrolling
+    return (
+      <section ref={sectionRef} id="products" className="py-8 bg-white">
+        {/* Section header */}
+        <div className="text-center mb-6 px-6">
+          <h2 
+            className={`text-2xl font-playfair text-[#18181B] mb-3 transition-all duration-1000 transform ${
+              isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
+            }`}
+            style={{ transitionDelay: '200ms' }}
+          >
+            <span className="font-playfair text-[#18181B]">Explore our </span>
+            <span className="font-playfair italic text-[#18181B]">products</span>
+          </h2>
+          <div 
+            className={`w-16 h-1 bg-[#a98028] mx-auto transition-all duration-1000 transform ${
+              isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-0'
+            }`}
+            style={{ transitionDelay: '400ms' }}
+          ></div>
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center items-center h-32">
+            <p className="text-lg text-gray-600">Loading products...</p>
+          </div>
+        ) : error ? (
+          <div className="flex justify-center items-center h-32">
+            <p className="text-lg text-red-500">{error}</p>
+          </div>
+        ) : (
+          <div className="overflow-x-auto px-6">
+            <div className="flex space-x-4" style={{ width: `${products.length * 280 + (products.length - 1) * 16}px` }}>
+              {products.map((product, index) => (
+                <Link 
+                  to={`/product/${product._id}`} 
+                  key={product._id}
+                  className={`flex-shrink-0 w-64 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden transition-all duration-1000 transform hover:shadow-md ${
+                    isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
+                  }`}
+                  style={{ transitionDelay: `${600 + (index * 150)}ms` }}
+                >
+                  {/* Image container */}
+                  <div className="aspect-[4/3] overflow-hidden">
+                    <img 
+                      src={getProductImage(product.images)} 
+                      alt={product.name}
+                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
+                      onError={(e) => {
+                        e.target.src = '/placeholder-product.jpg';
+                      }}
+                    />
+                  </div>
+                  
+                  {/* Content */}
+                  <div className="p-4">
+                    <h3 className="text-lg font-playfair text-[#18181B] mb-2 line-clamp-2">{product.name}</h3>
+                    <p className="text-sm font-satoshi text-[#323030] mb-3 line-clamp-2">
+                      {product.description || 'No description available'}
+                    </p>
+                    
+                    {/* Price and details */}
+                    <div className="flex items-center justify-between">
+                      <span className="text-lg font-satoshi font-semibold text-[#18181B]">
+                        {formatPrice(product.price)}
+                      </span>
+                      <div className="flex items-center text-sm text-gray-500">
+                        <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Scroll indicator */}
+        <div className="text-center mt-4 px-6">
+          <p className="text-sm text-gray-500 font-satoshi">← Swipe to explore more products →</p>
+        </div>
+      </section>
+    );
+  }
+
+  // Desktop layout - original grid design
   return (
     <section ref={sectionRef} id="products" className="py-12 bg-white px-[20px] sm:px-0 md:px-0 lg:px-[100px]">
       <div className="mx-auto max-w-[1200px]">

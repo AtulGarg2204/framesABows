@@ -35,13 +35,7 @@ const productSchema = new mongoose.Schema({
   }
 }, { timestamps: true });
 
-// Validate that max price is greater than or equal to min price
-productSchema.pre('validate', function(next) {
-  if (this.priceRange.max < this.priceRange.min) {
-    this.invalidate('priceRange.max', 'Maximum price must be greater than or equal to minimum price');
-  }
-  next();
-});
+
 
 const Product = mongoose.model('Product', productSchema);
 
