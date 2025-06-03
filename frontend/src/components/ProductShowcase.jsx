@@ -11,6 +11,33 @@ const ProductShowcase = () => {
   const sectionRef = useRef(null);
   const scrollContainerRef = useRef(null);
 
+  // Auto-scroll functionality for mobile
+  useEffect(() => {
+    if (isMobile && products.length > 1 && scrollContainerRef.current) {
+      const autoScroll = setInterval(() => {
+        setCurrentIndex((prevIndex) => {
+          const nextIndex = (prevIndex + 1) % products.length;
+          
+          // Calculate scroll position - show 92% of current card and 8% of next
+          const cardWidth = 256; // w-64 = 256px
+          const gap = 16; // space-x-4 = 16px
+          const scrollPosition = nextIndex * (cardWidth + gap);
+          
+          if (scrollContainerRef.current) {
+            scrollContainerRef.current.scrollTo({
+              left: scrollPosition,
+              behavior: 'smooth'
+            });
+          }
+          
+          return nextIndex;
+        });
+      }, 2000); // 2 seconds
+
+      return () => clearInterval(autoScroll);
+    }
+  }, [isMobile, products.length]);
+
   // Check for mobile view
   useEffect(() => {
     const handleResize = () => {
@@ -113,16 +140,19 @@ const ProductShowcase = () => {
             <p className="text-lg text-red-500">{error}</p>
           </div>
         ) : (
-          <div className="overflow-x-auto px-6">
-            <div className="flex space-x-4" style={{ width: `${products.length * 280 + (products.length - 1) * 16}px` }}>
+          <div className="overflow-x-auto px-6" ref={scrollContainerRef}>
+            <div className="flex space-x-4" style={{ width: `${products.length * 272}px` }}>
               {products.map((product, index) => (
                 <Link 
                   to={`/product/${product._id}`} 
                   key={product._id}
-                  className={`flex-shrink-0 w-64 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden transition-all duration-1000 transform hover:shadow-md ${
+                  className={`flex-shrink-0 bg-white rounded-lg border border-gray-200 shadow-sm overflow-hidden transition-all duration-1000 transform hover:shadow-md ${
                     isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-20'
                   }`}
-                  style={{ transitionDelay: `${600 + (index * 150)}ms` }}
+                  style={{ 
+                    width: '256px',
+                    transitionDelay: `${600 + (index * 150)}ms` 
+                  }}
                 >
                   {/* Image container */}
                   <div className="aspect-[4/3] overflow-hidden">
@@ -139,7 +169,7 @@ const ProductShowcase = () => {
                   {/* Content */}
                   <div className="p-4">
                     <h3 className="text-lg font-playfair text-[#18181B] mb-2 line-clamp-2">{product.name}</h3>
-                    <p className="text-sm font-satoshi text-[#323030] mb-3 line-clamp-2">
+                    <p className="text-sm font-satoshi text-[#323030] mb-3 line-clamp-1">
                       {product.description || 'No description available'}
                     </p>
                     
@@ -223,7 +253,7 @@ const ProductShowcase = () => {
                 {/* Text content with no card or background */}
                 <div className="text-center">
                   <h3 className="text-[22px] lg:text-[26px] font-playfair text-[#18181B] mb-1">{product.name}</h3>
-                  <p className="text-[14px] lg:text-[16px] font-satoshi text-[#323030] mb-2 line-clamp-2">
+                  <p className="text-[14px] lg:text-[16px] font-satoshi text-[#323030] mb-2 line-clamp-1">
                     {product.description || 'No description available'}
                   </p>
                   <span className="text-[16px] lg:text-[18px] font-satoshi font-medium text-[#18181B] mt-1">
