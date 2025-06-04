@@ -7,12 +7,22 @@ const HeroSection = () => {
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const sectionRef = useRef(null);
   
-  // Banner images array
-  const banners = [
+  // Desktop banner images array
+  const desktopBanners = [
     '/hero_banner_2.png',
     '/hero_banner.png',
     '/hero_banner_3.png'
   ];
+
+  // Mobile banner images array
+  const mobileBanners = [
+    '/1_banner.jpg',
+    '/2_banner.jpg',
+    '/3_banner.jpg'
+  ];
+
+  // Select appropriate banners based on screen size
+  const banners = isMobile ? mobileBanners : desktopBanners;
 
   // Check for mobile view
   useEffect(() => {
@@ -39,7 +49,7 @@ const HeroSection = () => {
     }, 5000); // Change slide every 5 seconds
 
     return () => clearInterval(timer);
-  }, []);
+  }, [banners.length]);
   
   // Set up Intersection Observer to detect when section enters viewport
   useEffect(() => {
@@ -150,7 +160,7 @@ const HeroSection = () => {
         </section>
 
         {/* Image Section */}
-        <section className="relative h-80 overflow-hidden w-full -mx-6">
+        <section className="relative h-80 overflow-hidden mx-6">
           {/* Background images with fade transition */}
           {banners.map((banner, index) => (
             <div 
