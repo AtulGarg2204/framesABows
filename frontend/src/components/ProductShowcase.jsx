@@ -102,10 +102,26 @@ const ProductShowcase = () => {
     return '/placeholder-product.jpg'; // Fallback image
   };
 
-  // Format price
-  const formatPrice = (price) => {
-    if (!price && price !== 0) return 'Price not available';
-    return `₹${price}`;
+  // Format price or show request for price
+  const formatPrice = (product) => {
+    if (!product.price && product.price !== 0) return 'Price not available';
+    
+    // Check if price should be shown
+    if (product.showPrice === false) {
+      return (
+        <a
+          href={product.whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-[#18181B] underline hover:text-[#a98028] transition-colors duration-200"
+          onClick={(e) => e.stopPropagation()} // Prevent Link navigation when clicking price
+        >
+          Request for price
+        </a>
+      );
+    }
+    
+    return `₹${product.price}`;
   };
 
   if (isMobile) {
@@ -175,8 +191,8 @@ const ProductShowcase = () => {
                     
                     {/* Price and details */}
                     <div className="flex items-center justify-between">
-                      <span className="text-lg font-satoshi font-semibold text-[#18181B]">
-                        {formatPrice(product.price)}
+                      <span className="text-lg font-satoshi font-semibold">
+                        {formatPrice(product)}
                       </span>
                       <div className="flex items-center text-sm text-gray-500">
                         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -256,8 +272,8 @@ const ProductShowcase = () => {
                   <p className="text-[14px] lg:text-[16px] font-satoshi text-[#323030] mb-2 line-clamp-1">
                     {product.description || 'No description available'}
                   </p>
-                  <span className="text-[16px] lg:text-[18px] font-satoshi font-medium text-[#18181B] mt-1">
-                    {formatPrice(product.price)}
+                  <span className="text-[16px] lg:text-[18px] font-satoshi font-medium">
+                    {formatPrice(product)}
                   </span>
                 </div>
               </Link>

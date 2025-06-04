@@ -16,6 +16,11 @@ const productSchema = new mongoose.Schema({
     required: [true, 'Price is required'],
     min: 0
   },
+  showPrice: {
+    type: Boolean,
+    default: true, // true = show price, false = show "Request for price"
+    required: true
+  },
   images: [{
     type: String, // Base64 encoded image strings
     trim: true
@@ -34,8 +39,6 @@ const productSchema = new mongoose.Schema({
     default: Date.now
   }
 }, { timestamps: true });
-
-
 
 const Product = mongoose.model('Product', productSchema);
 
