@@ -9,6 +9,7 @@ const EditProduct = () => {
     name: '',
     description: '',
     price: '',
+    showPrice: true, // Default to show price
     whatsappUrl: '',
     images: []
   });
@@ -41,6 +42,7 @@ const EditProduct = () => {
           name: data.data.name,
           description: data.data.description,
           price: data.data.price,
+          showPrice: data.data.showPrice !== undefined ? data.data.showPrice : true, // Handle backward compatibility
           whatsappUrl: data.data.whatsappUrl,
           images: data.data.images || []
         });
@@ -60,10 +62,10 @@ const EditProduct = () => {
 
   // Handle text input changes
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData({
       ...formData,
-      [name]: value
+      [name]: type === 'checkbox' ? checked : (name === 'price' ? Number(value) : value)
     });
   };
 
@@ -240,6 +242,44 @@ const EditProduct = () => {
                       className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm font-satoshi"
                       required
                     />
+                  </div>
+
+                  {/* Price Display Option */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 font-satoshi mb-3">
+                      Price Display Option *
+                    </label>
+                    <div className="space-y-3">
+                      <div className="flex items-center">
+                        <input
+                          id="showPrice"
+                          name="showPrice"
+                          type="radio"
+                          checked={formData.showPrice === true}
+                          onChange={() => setFormData({...formData, showPrice: true})}
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                        />
+                        <label htmlFor="showPrice" className="ml-3 block text-sm text-gray-900 font-satoshi">
+                          Show Price (Display the actual price)
+                        </label>
+                      </div>
+                      <div className="flex items-center">
+                        <input
+                          id="requestPrice"
+                          name="showPrice"
+                          type="radio"
+                          checked={formData.showPrice === false}
+                          onChange={() => setFormData({...formData, showPrice: false})}
+                          className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300"
+                        />
+                        <label htmlFor="requestPrice" className="ml-3 block text-sm text-gray-900 font-satoshi">
+                          Request for Price (Show "Request for price" with WhatsApp link)
+                        </label>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-xs text-gray-500 font-satoshi">
+                      Choose whether to display the actual price or show "Request for price" option
+                    </p>
                   </div>
                   
                   {/* WhatsApp URL */}
